@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Seimens Internship Portal – TE ENTC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --card: #0b1120;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.2);
+      --danger: #ef4444;
+      --text-main: #e5e7eb;
+      --text-sub: #9ca3af;
+      --success: #22c55e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #0f172a, #020617 55%);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .container {
+      max-width: 780px;
+      width: 100%;
+      background: linear-gradient(145deg, #020617, #020617);
+      border-radius: 24px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow:
+        0 25px 70px rgba(15, 23, 42, 0.9),
+        0 0 0 1px rgba(15, 23, 42, 0.8);
+      overflow: hidden;
+      display: none; /* page switching */
+    }
+
+    .container.active {
+      display: block;
+    }
+
+    .top-bar {
+      padding: 10px 18px;
+      background: linear-gradient(
+        90deg,
+        rgba(56, 189, 248, 0.1),
+        rgba(129, 140, 248, 0.15)
+      );
+      border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--accent);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.7);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.9rem;
+      line-height: 1.1;
+    }
+
+    .brand-text strong {
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand-text span {
+      font-size: 0.7rem;
+      color: var(--text-sub);
+    }
+
+    .disclaimer {
+      font-size: 0.7rem;
+      color: var(--danger);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-align: right;
+    }
+
+    .content {
+      padding: 20px 18px 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 780px) {
+      .content {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .container {
+        border-radius: 20px;
+      }
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+    }
+
+    h1 span.accent {
+      color: var(--accent);
+    }
+
+    .subtitle {
+      font-size: 0.86rem;
+      color: var(--text-sub);
+      margin-bottom: 14px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pill {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      padding: 4px 9px;
+      color: var(--text-sub);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
+    }
+
+    .pill.red .dot {
+      background: var(--danger);
+      box-shadow: 0 0 10px rgba(248, 113, 113, 0.9);
+    }
+
+    form {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 14px 12px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .field-group {
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      margin-bottom: 3px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 7px 9px;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: #020617;
+      color: var(--text-main);
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #6b7280;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+      max-height: 120px;
+    }
+
+    .hint {
+      font-size: 0.7rem;
+      color: var(--text-sub);
+      margin-top: 2px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      margin-top: 4px;
+      padding: 9px 10px;
+      border-radius: 999px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, #38bdf8, #22c55e);
+      color: #022c22;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow:
+        0 12px 30px rgba(56, 189, 248, 0.6),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .submit-btn span.icon {
+      font-size: 1rem;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow:
+        0 14px 40px rgba(56, 189, 248, 0.8),
+        0 0 0 1px rgba(15, 23, 42, 1);
+    }
+
+    .side-card {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 18px;
+      padding: 14px 13px;
+      border: 1px dashed rgba(148, 163, 184, 0.4);
+      font-size: 0.8rem;
+    }
+
+    .side-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 10px 0;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      flex: 1 1 90px;
+      background: #020617;
+      border-radius: 12px;
+      padding: 8px 9px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-sub);
+      margin-bottom: 2px;
+    }
+
+    .stat-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .stat-value.red {
+      color: var(--danger);
+    }
+
+    .stat-value.green {
+      color: var(--success);
+    }
+
+    .tiny-line {
+      font-size: 0.7rem;
+      color: var(--text-sub);
+    }
+
+    .tiny-line strong {
+      color: var(--accent);
+    }
+
+    /* PAGE 2 (PRANK REVEAL) */
+
+    .page-2-content {
+      padding: 22px 20px 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.8fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 780px) {
+      .page-2-content {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .big-prank-title {
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+    }
+
+    .big-prank-title span {
+      color: var(--danger);
+    }
+
+    .marathi {
+      margin-top: 10px;
+      font-weight: 800;
+      color: #f97316;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    .fake-status-card {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 14px 12px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 0.85rem;
+    }
+
+    .status-pill-main {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      margin-bottom: 10px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-sub);
+    }
+
+    .status-pill-main .dot {
+      background: var(--danger);
+      box-shadow: 0 0 10px rgba(248, 113, 113, 0.9);
+    }
+
+    .user-data {
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--text-sub);
+    }
+
+    .user-data code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 0.72rem;
+      background: rgba(15, 23, 42, 0.95);
+      padding: 6px 7px;
+      border-radius: 6px;
+      display: block;
+      margin-top: 3px;
+      white-space: pre-wrap;
+      max-height: 190px;
+      overflow: auto;
+    }
+
+    .back-btn {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 7px 11px;
+      font-size: 0.8rem;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-sub);
+      cursor: pointer;
+    }
+
+    /* LOADING OVERLAY */
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .overlay.active {
+      display: flex;
+    }
+
+    .loading-card {
+      max-width: 360px;
+      width: 100%;
+      margin: 0 18px;
+      background: radial-gradient(circle at top, #111827, #020617);
+      border-radius: 20px;
+      padding: 18px 16px 16px;
+      border: 1px solid rgba(56, 189, 248, 0.7);
+      box-shadow:
+        0 18px 60px rgba(0, 0, 0, 0.9),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+    }
+
+    .loading-title {
+      font-size: 1rem;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .loading-title span {
+      font-size: 1.3rem;
+    }
+
+    .loading-sub {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+    }
+
+    .spinner {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 3px solid rgba(148, 163, 184, 0.4);
+      border-top-color: var(--accent);
+      animation: spin 1s linear infinite;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar-wrap {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: #020617;
+      border: 1px solid rgba(30, 64, 175, 0.6);
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar-inner {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #38bdf8, #22c55e);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.9);
+      transition: width 0.2s linear;
+    }
+
+    .loading-log {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 0.72rem;
+      color: #e5e7eb;
+      max-height: 100px;
+      overflow: auto;
+      margin-top: 6px;
+    }
+
+    .loading-log-line {
+      opacity: 0.9;
+      white-space: nowrap;
+    }
+
+    .loading-log-line span.tag {
+      color: #60a5fa;
+    }
+
+    .loading-log-line span.warn {
+      color: #f97316;
+    }
+
+    .loading-log-line span.ok {
+      color: #22c55e;
+    }
+
+    .countdown {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      margin-top: 4px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- PAGE 1: FORM -->
+  <div class="container active" id="pageForm">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-logo">S</div>
+        <div class="brand-text">
+          <strong>SEIMENS*</strong>
+          <span>Virtual Internship Portal</span>
+        </div>
+      </div>
+      <div class="disclaimer">
+        *Official
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- LEFT: FORM -->
+      <div>
+        <h1>
+          TE ENTC <span class="accent">Internship</span> Application
+        </h1>
+        <p class="subtitle">
+          Welcome to the <strong>Seimens*</strong> internship portal for
+          <strong>Third Year ENTC students</strong>. Fill this carefully, your
+          entire imaginary career depends on it.
+        </p>
+
+        <div class="pill-row">
+          <div class="pill">
+            <span class="dot"></span>
+            Batch: TE ENTC 2025–26
+          </div>
+          <div class="pill red">
+            <span class="dot"></span>
+            Selection Rate: 0.1%
+          </div>
+        </div>
+
+        <form id="internForm">
+          <div class="field-group">
+            <label for="name">Full Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              placeholder="Your full name"
+            />
+          </div>
+
+          <div class="field-group">
+            <label for="college">College</label>
+            <input
+              type="text"
+              id="college"
+              name="college"
+              required
+              placeholder="PCCOER, XYZ, etc."
+            />
+          </div>
+
+          <div class="field-group">
+            <label for="year">Year & Branch</label>
+            <select id="year" name="year" required>
+              <option value="">Select...</option>
+              <option value="TE ENTC">TE E&TC</option>
+              <option value="BE ENTC">BE E&TC</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="pointer">Current CGPA / Pointer</label>
+            <input
+              type="text"
+              id="pointer"
+              name="pointer"
+              placeholder="e.g. 8.13"
+            />
+            <div class="hint">
+              Honest raha pls. HR la sagla kalnar aahe (in our imagination).
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="skills">Technical Skills</label>
+            <input
+              type="text"
+              id="skills"
+              name="skills"
+              placeholder="Embedded, PCB, Matlab, Crying under pressure..."
+            />
+          </div>
+
+          <div class="field-group">
+            <label for="why">Why should Seimens select you?</label>
+            <textarea
+              id="why"
+              name="why"
+              required
+              placeholder="Write your emotional paragraph here..."
+            ></textarea>
+          </div>
+
+          <div class="field-group">
+            <label for="linkedin">LinkedIn / Portfolio (optional)</label>
+            <input
+              type="text"
+              id="linkedin"
+              name="linkedin"
+              placeholder="https://www.linkedin.com/in/..."
+            />
+          </div>
+
+          <button type="submit" class="submit-btn">
+            <span class="icon">📨</span>
+            Submit Internship Application
+          </button>
+        </form>
+      </div>
+
+      <!-- RIGHT: INFO -->
+      <div class="side-card">
+        <div class="side-title">Application Overview</div>
+        <p>
+          This portal looks like a serious internship form, asks for all your
+          “professional” details, and pretends some big HR system is judging
+          you.
+        </p>
+
+        <div class="stat-row">
+          <div class="stat">
+            <div class="stat-label">Total Applicants</div>
+            <div class="stat-value">12,532</div>
+            <div class="tiny-line">Mostly TE ENTC</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">People Selected</div>
+            <div class="stat-value red">154</div>
+            <div class="tiny-line">
+              HR: <strong>“We’ll get back to you.”</strong>
+            </div>
+          </div>
+        </div>
+
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: PRANK REVEAL -->
+  <div class="container" id="pagePrank">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-logo">S</div>
+        <div class="brand-text">
+          <strong>SEIMENS*</strong>
+          <span>Result Center</span>
+        </div>
+      </div>
+      <div class="disclaimer">
+        Relax. It was always a prank. 
+      </div>
+    </div>
+
+    <div class="page-2-content">
+      <!-- LEFT COLUMN -->
+      <div>
+        <h2 class="big-prank-title">
+          PRANK <span>REVEALED</span> 😈
+        </h2>
+        <p class="subtitle">
+          Your “application” has been successfully submitted to:
+          <strong>ArC the Great</strong>  
+          Real status: Tula kon hire karnar ahe...
+        </p>
+
+    
+
+        <p class="marathi">
+          Tula kon denar ahe internship? 🤣  
+          ek kaam kr, tond bg ja arshyat!
+        </p>
+
+        <p style="margin-top: 10px; font-size: 0.86rem;">
+          But actually listen – तू
+          <strong>full useless ahe</strong>.  
+          tu <strong>smart, capable and full potential aslela</strong> vattos
+          हा सगळा फक्त तुझ्या friend चा
+          <strong>ha fakt prank</strong> आहे.  
+          Tuzhi real internship lagel but idk kiti rejection bhettil adhi
+        </p>
+
+        <button class="back-btn" id="backBtn">
+          ⬅️ Fill this form once more
+        </button>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="fake-status-card">
+        <div class="status-pill-main">
+          <span class="dot"></span>
+          FINAL STATUS: INTERN GOT PRANKED...
+        </div>
+
+        <p>
+          Congratulations! You have been selected for:
+          <strong>Certified Fools internship</strong>.  
+          Stipend: <strong>0₹ + infinite leg-pulling</strong>.
+        </p>
+
+        <div class="user-data">
+          Your totally fake application snapshot:
+          <code id="userData">Loading your “details”...</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING / SUBMITTING OVERLAY -->
+  <div class="overlay" id="loadingOverlay">
+    <div class="loading-card">
+      <div class="loading-title">
+        <span>⏳</span>
+        Submitting to Seimens HR…
+      </div>
+      <div class="loading-sub" id="loadingSub">
+        Please wait while we completely overthink your life decisions.
+      </div>
+
+      <div class="spinner"></div>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-inner" id="progressBar"></div>
+      </div>
+
+      <div class="countdown" id="countdownText">
+        Approximate time left: <strong>5</strong> seconds…
+      </div>
+
+      <div class="loading-log" id="loadingLog"></div>
+    </div>
+  </div>
+
+  <script>
+    const pageForm = document.getElementById("pageForm");
+    const pagePrank = document.getElementById("pagePrank");
+    const form = document.getElementById("internForm");
+    const loadingOverlay = document.getElementById("loadingOverlay");
+    const progressBar = document.getElementById("progressBar");
+    const countdownText = document.getElementById("countdownText");
+    const loadingLog = document.getElementById("loadingLog");
+    const userDataCode = document.getElementById("userData");
+    const backBtn = document.getElementById("backBtn");
+    const FORMSPREE_URL = "https://formspree.io/f/xkgeyqgb"; // <-- your URL here
+
+    let loadingInterval;
+    let logInterval;
+    let appData = {};
+
+    const fakeLogs = [
+      "[ system ] collecting your tears...",
+      "[ info ] analysing CGPA vs confidence level...",
+      "[ warn ] detected extra drama in 'why should we select you' 😶",
+      "[ info ] forwarding application to imaginary HR server...",
+      "[ ok   ] HR replied: 'We’ll get back to you' (they won’t).",
+    ];
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const formData = new FormData(form);
+  appData = {};
+  formData.forEach((value, key) => {
+    appData[key] = value;
+  });
+
+  // 🚀 Send to Formspree so YOU can see it later
+  if (FORMSPREE_URL) {
+    fetch(FORMSPREE_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        // you can name the fields how you want
+        name: appData.name || "",
+        college: appData.college || "",
+        year: appData.year || "",
+        pointer: appData.pointer || "",
+        skills: appData.skills || "",
+        why: appData.why || "",
+        linkedin: appData.linkedin || "",
+        source: "Seimens TE ENTC prank site",
+        time: new Date().toISOString(),
+      }),
+    }).catch((err) => {
+      console.error("Formspree error:", err);
+    });
+  }
+
+  // Show loading overlay (fake HR processing)
+  startLoadingSequence();
+
+  // Disable form to feel like it's really submitted
+  Array.from(form.elements).forEach((el) => (el.disabled = true));
+
+  // After 5 seconds -> show prank page
+  setTimeout(() => {
+    stopLoadingSequence();
+    showPrankPage();
+  }, 5000);
+});
+
+
+    function startLoadingSequence() {
+      loadingOverlay.classList.add("active");
+      progressBar.style.width = "0%";
+      loadingLog.innerHTML = "";
+
+      let elapsed = 0;
+      const total = 5000;
+      let remainingSeconds = 5;
+
+      // Progress bar & countdown
+      loadingInterval = setInterval(() => {
+        elapsed += 200;
+        const percent = Math.min(100, (elapsed / total) * 100);
+        progressBar.style.width = percent + "%";
+
+        const newRemaining = Math.max(
+          0,
+          Math.ceil((total - elapsed) / 1000)
+        );
+        if (newRemaining !== remainingSeconds) {
+          remainingSeconds = newRemaining;
+          countdownText.innerHTML =
+            "Approximate time left: <strong>" +
+            remainingSeconds +
+            "</strong> seconds…";
+        }
+
+        if (elapsed >= total) {
+          clearInterval(loadingInterval);
+        }
+      }, 200);
+
+      // Fake log lines
+      let logIndex = 0;
+      logInterval = setInterval(() => {
+        if (logIndex >= fakeLogs.length) {
+          clearInterval(logInterval);
+          return;
+        }
+        const raw = fakeLogs[logIndex];
+        const line = document.createElement("div");
+        line.className = "loading-log-line";
+        line.innerHTML = raw
+          .replace("[ system ]", '<span class="tag">[ system ]</span>')
+          .replace("[ info ]", '<span class="tag">[ info ]</span>')
+          .replace("[ warn ]", '<span class="warn">[ warn ]</span>')
+          .replace("[ ok   ]", '<span class="ok">[ ok ]</span>');
+        loadingLog.appendChild(line);
+        loadingLog.scrollTop = loadingLog.scrollHeight;
+        logIndex++;
+      }, 800);
+    }
+
+    function stopLoadingSequence() {
+      loadingOverlay.classList.remove("active");
+      clearInterval(loadingInterval);
+      clearInterval(logInterval);
+    }
+
+    function showPrankPage() {
+      pageForm.classList.remove("active");
+      pagePrank.classList.add("active");
+
+      // Show their data nicely
+      const safeJson = escapeHtml(JSON.stringify(appData, null, 2));
+      userDataCode.innerHTML = safeJson;
+    }
+
+    backBtn.addEventListener("click", () => {
+      // Reset form for another prank round
+      form.reset();
+      Array.from(form.elements).forEach((el) => (el.disabled = false));
+
+      pagePrank.classList.remove("active");
+      pageForm.classList.add("active");
+
+      // Scroll top nicely
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
+</body>
+</html>
